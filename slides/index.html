@@ -373,8 +373,8 @@ i &amp;= 1, \ldots, N
 <h2>Default: Gradient-based inference</h2>
 
 <img data-src="images/gradient-based.png" width="278" class="r-stretch"></section>
-<section id="using-mcmc" class="slide level2">
-<h2>Using <code>mcmc</code></h2>
+<section id="using-greta" class="slide level2">
+<h2>Using <code>greta</code></h2>
 <div class="panel-tabset">
 <ul id="tabset-2" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-2-1">Model prep</a></li><li><a href="#tabset-2-2">Samplers</a></li><li><a href="#tabset-2-3">Other options</a></li></ul>
 <div class="tab-content">
@@ -408,7 +408,7 @@ i &amp;= 1, \ldots, N
 </div>
 <div id="tabset-2-3">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6" data-code-line-numbers="|2|3|4|5|6|7-10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href=""></a>draws <span class="ot">&lt;-</span> <span class="fu">mcmc</span>(m,</span>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href=""></a>draws <span class="ot">&lt;-</span> <span class="fu">mcmc</span>(m,</span>
 <span id="cb6-2"><a href=""></a>              <span class="at">n_samples =</span> <span class="dv">1000</span>,</span>
 <span id="cb6-3"><a href=""></a>              <span class="at">thin =</span> <span class="dv">10</span>,</span>
 <span id="cb6-4"><a href=""></a>              <span class="at">warmup =</span> <span class="dv">1000</span>,</span>
@@ -424,29 +424,113 @@ i &amp;= 1, \ldots, N
 </div>
 </div>
 </section>
-<section id="extendable" class="slide level2">
-<h2>Extendable</h2>
+<section id="greta-integrattions" class="slide level2">
+<h2>{greta} integrattions</h2>
+<div class="panel-tabset">
+<ul id="tabset-3" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-3-1">summary</a></li><li><a href="#tabset-3-2">coda</a></li><li><a href="#tabset-3-3">traceplot</a></li><li><a href="#tabset-3-4">density</a></li><li><a href="#tabset-3-5">diagnostics</a></li></ul>
+<div class="tab-content">
+<div id="tabset-3-1">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href=""></a><span class="fu">summary</span>(draws)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Iterations = 1:1000
+Thinning interval = 1 
+Number of chains = 4 
+Sample size per chain = 1000 
+
+1. Empirical mean and standard deviation for each variable,
+   plus standard error of the mean:
+
+                        Mean     SD Naive SE Time-series SE
+intercept           -0.05075 0.1323 0.002092       0.002512
+coef_flipper_length  1.32113 0.2867 0.004534       0.005241
+coef_body_mass      -2.26585 0.3155 0.004988       0.005382
+
+2. Quantiles for each variable:
+
+                       2.5%     25%      50%      75%   97.5%
+intercept           -0.3203 -0.1379 -0.04899  0.03471  0.2198
+coef_flipper_length  0.7671  1.1270  1.31055  1.50570  1.9099
+coef_body_mass      -2.9155 -2.4695 -2.25978 -2.06184 -1.6624</code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-3-2">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href=""></a><span class="fu">plot</span>(draws)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-6-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-3-3">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href=""></a>bayesplot<span class="sc">::</span><span class="fu">mcmc_trace</span>(draws)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-7-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-3-4">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href=""></a>bayesplot<span class="sc">::</span><span class="fu">mcmc_dens</span>(draws)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-8-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-3-5">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href=""></a>coda<span class="sc">::</span><span class="fu">gelman.diag</span>(draws, <span class="at">autoburnin =</span> <span class="cn">FALSE</span>, <span class="at">multivariate =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Potential scale reduction factors:
+
+                    Point est. Upper C.I.
+intercept                 1.02       1.02
+coef_flipper_length       1.01       1.02
+coef_body_mass            1.01       1.01</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="greta-is-extendable" class="slide level2">
+<h2>{greta} is Extendable</h2>
 
 <img data-src="images/greta-extendable.png" width="698" class="r-stretch"></section></section>
 <section>
 <section id="greta.gam" class="title-slide slide level1 center">
 <h1><code>greta.gam</code></h1>
 <div class="columns">
-<div class="column" style="width:50%;">
+<div class="column" style="width:45%;">
 <blockquote>
-<p><code>greta.gam</code> lets you use <a href="https://CRAN.R-project.org/package=mgcv">mgcv</a>’s smoother functions and formula syntax to define smooth terms for use in a <a href="https://greta-stats.org/">greta</a> model. You can then define your own likelihood to complete the model, and fit it by MCMC.</p>
+<p>Use <a href="https://CRAN.R-project.org/package=mgcv">mgcv</a> smoother functions and formula syntax to define smooth terms for use in a <a href="https://greta-stats.org/">greta</a> model. Define your likelihood, fit with MCMC.</p>
 </blockquote>
-</div><div class="column" style="width:50%;">
+</div><div class="column" style="width:55%;">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href=""></a>mgcv_fit <span class="ot">&lt;-</span> <span class="fu">gam</span>(y <span class="sc">~</span> <span class="fu">s</span>(x2), </span>
-<span id="cb7-2"><a href=""></a>                <span class="at">data =</span> dat)</span>
-<span id="cb7-3"><a href=""></a><span class="fu">plot</span>(mgcv_fit, </span>
-<span id="cb7-4"><a href=""></a>     <span class="at">scheme =</span> <span class="dv">1</span>, </span>
-<span id="cb7-5"><a href=""></a>     <span class="at">shift =</span> <span class="fu">coef</span>(mgcv_fit)[<span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href=""></a>mgcv_fit <span class="ot">&lt;-</span> <span class="fu">gam</span>(y <span class="sc">~</span> <span class="fu">s</span>(x2), </span>
+<span id="cb14-2"><a href=""></a>                <span class="at">data =</span> dat)</span>
+<span id="cb14-3"><a href=""></a><span class="fu">plot</span>(mgcv_fit, </span>
+<span id="cb14-4"><a href=""></a>     <span class="at">scheme =</span> <span class="dv">1</span>, </span>
+<span id="cb14-5"><a href=""></a>     <span class="at">shift =</span> <span class="fu">coef</span>(mgcv_fit)[<span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="index_files/figure-revealjs/unnamed-chunk-6-1.png" width="960"></p>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-11-1.png" width="960"></p>
 </figure>
 </div>
 </div>
@@ -456,27 +540,27 @@ i &amp;= 1, \ldots, N
 <section id="greta.gam-1" class="slide level2">
 <h2><code>greta.gam</code></h2>
 <div class="panel-tabset">
-<ul id="tabset-3" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-3-1">code</a></li><li><a href="#tabset-3-2">plot</a></li></ul>
+<ul id="tabset-4" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-4-1">code</a></li><li><a href="#tabset-4-2">plot</a></li></ul>
 <div class="tab-content">
-<div id="tabset-3-1">
-<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href=""></a>linear_predictor <span class="ot">&lt;-</span> <span class="fu">smooths</span>(<span class="sc">~</span> <span class="fu">s</span>(x2), <span class="at">data =</span> dat)</span>
-<span id="cb8-2"><a href=""></a><span class="co"># specify the distribution of the response</span></span>
-<span id="cb8-3"><a href=""></a>dist_sd <span class="ot">&lt;-</span> <span class="fu">cauchy</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">truncation =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="cn">Inf</span>))</span>
-<span id="cb8-4"><a href=""></a><span class="fu">distribution</span>(dat<span class="sc">$</span>y) <span class="ot">&lt;-</span> <span class="fu">normal</span>(<span class="at">mean =</span> linear_predictor, <span class="at">sd =</span> dist_sd)</span>
-<span id="cb8-5"><a href=""></a><span class="co"># make some prediction data</span></span>
-<span id="cb8-6"><a href=""></a>pred_dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x2 =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">100</span>))</span>
-<span id="cb8-7"><a href=""></a><span class="co"># run `evaluate_smooths` on the linear predictor</span></span>
-<span id="cb8-8"><a href=""></a>linear_preds <span class="ot">&lt;-</span> <span class="fu">evaluate_smooths</span>(linear_predictor, <span class="at">newdata =</span> pred_dat)</span>
-<span id="cb8-9"><a href=""></a><span class="co"># Specify as model object, fit with MCMC as we do with greta normally</span></span>
-<span id="cb8-10"><a href=""></a>m <span class="ot">&lt;-</span> <span class="fu">model</span>(linear_preds)</span>
-<span id="cb8-11"><a href=""></a><span class="co"># draw from the posterior</span></span>
-<span id="cb8-12"><a href=""></a>draws <span class="ot">&lt;-</span> <span class="fu">mcmc</span>(m, <span class="at">n_samples =</span> <span class="dv">200</span>, <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb8-13"><a href=""></a><span class="co"># add in a line for each posterior sample</span></span>
-<span id="cb8-14"><a href=""></a><span class="fu">apply</span>(draws[[<span class="dv">1</span>]], <span class="dv">1</span>, lines, <span class="at">x =</span> pred_dat<span class="sc">$</span>x2, </span>
-<span id="cb8-15"><a href=""></a>      <span class="at">col =</span> <span class="fu">adjustcolor</span>(<span class="st">"firebrick"</span>, <span class="at">alpha.f =</span> <span class="fl">0.1</span>))</span>
-<span id="cb8-16"><a href=""></a><span class="fu">points</span>(dat<span class="sc">$</span>x2, dat<span class="sc">$</span>y, <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">cex =</span> <span class="fl">0.2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="tabset-4-1">
+<div class="sourceCode" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href=""></a>linear_predictor <span class="ot">&lt;-</span> <span class="fu">smooths</span>(<span class="sc">~</span> <span class="fu">s</span>(x2), <span class="at">data =</span> dat)</span>
+<span id="cb15-2"><a href=""></a></span>
+<span id="cb15-3"><a href=""></a>dist_sd <span class="ot">&lt;-</span> <span class="fu">cauchy</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">truncation =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="cn">Inf</span>))</span>
+<span id="cb15-4"><a href=""></a><span class="fu">distribution</span>(dat<span class="sc">$</span>y) <span class="ot">&lt;-</span> <span class="fu">normal</span>(<span class="at">mean =</span> linear_predictor, <span class="at">sd =</span> dist_sd)</span>
+<span id="cb15-5"><a href=""></a></span>
+<span id="cb15-6"><a href=""></a>pred_dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x2 =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">100</span>))</span>
+<span id="cb15-7"><a href=""></a></span>
+<span id="cb15-8"><a href=""></a>linear_preds <span class="ot">&lt;-</span> <span class="fu">evaluate_smooths</span>(linear_predictor, <span class="at">newdata =</span> pred_dat)</span>
+<span id="cb15-9"><a href=""></a></span>
+<span id="cb15-10"><a href=""></a>m <span class="ot">&lt;-</span> <span class="fu">model</span>(linear_preds)</span>
+<span id="cb15-11"><a href=""></a></span>
+<span id="cb15-12"><a href=""></a>draws <span class="ot">&lt;-</span> <span class="fu">mcmc</span>(m, <span class="at">n_samples =</span> <span class="dv">200</span>, <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb15-13"><a href=""></a></span>
+<span id="cb15-14"><a href=""></a><span class="fu">apply</span>(draws[[<span class="dv">1</span>]], <span class="dv">1</span>, lines, <span class="at">x =</span> pred_dat<span class="sc">$</span>x2, </span>
+<span id="cb15-15"><a href=""></a>      <span class="at">col =</span> <span class="fu">adjustcolor</span>(<span class="st">"firebrick"</span>, <span class="at">alpha.f =</span> <span class="fl">0.1</span>))</span>
+<span id="cb15-16"><a href=""></a><span class="fu">points</span>(dat<span class="sc">$</span>x2, dat<span class="sc">$</span>y, <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">cex =</span> <span class="fl">0.2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="tabset-3-2">
+<div id="tabset-4-2">
 <p><img data-src="images/greta-gam-mcmc.png"></p>
 </div>
 </div>
@@ -491,24 +575,6 @@ i &amp;= 1, \ldots, N
 <li class="fragment">HMC Snaper</li>
 <li class="fragment">Extension packages (lme-like formula, more distributions, point processes)</li>
 </ul>
-</section>
-<section id="resources" class="slide level2">
-<h2>Resources</h2>
-<ul>
-<li><strong>github:</strong> <a href="https://github.com/greta-dev/greta">github.com/greta-dev/greta</a></li>
-<li><strong>Docs:</strong> <a href="https://greta-stats.org">greta-stats.org</a></li>
-<li><strong>Help:</strong> <a href="https://forum.greta-stats.org/">https://forum.greta-stats.org/</a></li>
-</ul>
-<p>Install: (not currently on CRAN - soon to be amended!)</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href=""></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"greta-dev/greta"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Or via the <a href="https://greta-dev.r-universe.dev/builds">r-universe</a></p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href=""></a><span class="fu">install.packages</span>(<span class="st">"greta"</span>, </span>
-<span id="cb10-2"><a href=""></a>                 <span class="at">repos =</span> <span class="fu">c</span>(<span class="st">"https://greta-dev.r-universe.dev"</span>,</span>
-<span id="cb10-3"><a href=""></a>                           <span class="st">"https://cloud.r-project.org"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
 </section>
 <section id="why-greta" class="slide level2">
 <h2>Why ‘greta’ ?</h2>
@@ -530,16 +596,78 @@ i &amp;= 1, \ldots, N
 </div>
 </div></div>
 </section></section>
-<section id="our-turn" class="title-slide slide level1 center">
-<h1>Our turn</h1>
-<p>Go to</p>
-<p>LINK</p>
+<section>
+<section id="modelling-penguins-with-palmerpenguins" class="title-slide slide level1 center" data-background-color="white">
+<h1>Modelling Penguins with <code>palmerpenguins</code></h1>
+
+<img data-src="images/lter_penguins.png" class="r-stretch"></section>
+<section id="our-turn-modelling-penguins" class="slide level2 smaller">
+<h2>Our Turn: Modelling Penguins!</h2>
+<div class="columns">
+<div class="column" style="width:40%;">
+<p><img data-src="images/palmerpenguins.png"></p>
+</div><div class="column" style="width:60%;">
 <ul>
-<li class="fragment">Sign in with a github account or google account</li>
+<li class="fragment">Build a model to predict the sex of an individual penguin based on measurements of that individual.</li>
+<li class="fragment">This is a thing people do - see <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0090081">“Ecological Sexual Dimorphism and Environmental Variability within a Community of Antarctic Penguins (Genus Pygoscelis)”</a> by Gorman et al., 2014.</li>
+<li class="fragment">The <code>penguins</code> dataset is now also in base R 4.5.0! (With slight differences, see <a href="https://www.njtierney.com/post/2025/04/14/r-version-4-5-0-is-out/">njtierney.com/post/2025/04/14/r-version-4-5-0-is-out/</a>)</li>
+</ul>
+</div></div>
+</section>
+<section id="our-turn-modelling-penguins-1" class="slide level2 smaller">
+<h2>Our Turn: Modelling Penguins!</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<ul>
+<li class="fragment">Predict probability of a penguin being female, based on flipper length, and body mass.</li>
+<li class="fragment">Demonstrate greta workflow:
+<ul>
+<li class="fragment">DAG plot</li>
+<li class="fragment"><code>calculate()</code> for simulations</li>
+<li class="fragment">integrates with <code>coda</code> and <code>bayesplot</code></li>
+</ul></li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><span class="math display">\[
+\begin{aligned}
+\beta_0, \beta_1, \beta_2 &amp;\sim \text{Normal}(0, 10) \\
+\eta_i &amp;= \beta_0 + \\
+&amp;\beta_1 \cdot \text{flipper}_i + \\
+&amp;\beta_2 \cdot \text{mass}_i \\
+\text{logit}(p_i) &amp;= \eta_i \\
+y_i &amp;\sim \text{Bernoulli}(p_i), \\
+i &amp;= 1, \ldots, N
+\end{aligned}
+\]</span></p>
+</div></div>
+</section>
+<section id="our-turn-posit.cloud" class="slide level2 small">
+<h2>Our turn: posit.cloud</h2>
+
+<img data-src="index_files/figure-revealjs/unnamed-chunk-12-1.png" width="960" class="r-stretch"><ul>
+<li class="fragment">Sign in with a github/google</li>
 <li class="fragment">Follow along with me</li>
+<li class="fragment">Or run locally from <a href="https://github.com/greta-dev/greta-botb26-workshop">github.com/greta-dev/greta-botb26-workshop</a></li>
 </ul>
 </section>
-
+<section id="resources" class="slide level2">
+<h2>Resources</h2>
+<ul>
+<li><strong>github:</strong> <a href="https://github.com/greta-dev/greta">github.com/greta-dev/greta</a></li>
+<li><strong>Docs:</strong> <a href="https://greta-stats.org">greta-stats.org</a></li>
+<li><strong>Help:</strong> <a href="https://forum.greta-stats.org/">https://forum.greta-stats.org/</a></li>
+</ul>
+<p>Install: (not currently on CRAN - soon to be amended!)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href=""></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"greta-dev/greta"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Or via the <a href="https://greta-dev.r-universe.dev/builds">r-universe</a></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href=""></a><span class="fu">install.packages</span>(<span class="st">"greta"</span>, </span>
+<span id="cb17-2"><a href=""></a>                 <span class="at">repos =</span> <span class="fu">c</span>(<span class="st">"https://greta-dev.r-universe.dev"</span>,</span>
+<span id="cb17-3"><a href=""></a>                           <span class="st">"https://cloud.r-project.org"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section></section>
 <section id="extras" class="title-slide slide level1 center">
 <h1>Extras</h1>
 
@@ -568,67 +696,67 @@ j &amp;= 1, \ldots, J \\
 \]</span></p>
 </div><div class="column" style="width:60%;">
 <div class="panel-tabset">
-<ul id="tabset-4" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-4-1">Data</a></li><li><a href="#tabset-4-2">JAGS</a></li><li><a href="#tabset-4-3">STAN</a></li><li><a href="#tabset-4-4">greta</a></li></ul>
+<ul id="tabset-5" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-5-1">Data</a></li><li><a href="#tabset-5-2">JAGS</a></li><li><a href="#tabset-5-3">STAN</a></li><li><a href="#tabset-5-4">greta</a></li></ul>
 <div class="tab-content">
-<div id="tabset-4-1">
+<div id="tabset-5-1">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href=""></a>y <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">21</span>, <span class="dv">20</span>, <span class="dv">15</span>)</span>
-<span id="cb11-2"><a href=""></a>n <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">48</span>, <span class="dv">34</span>, <span class="dv">21</span>)</span>
-<span id="cb11-3"><a href=""></a>Z <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">30</span>, <span class="dv">50</span>)</span>
-<span id="cb11-4"><a href=""></a>alpha <span class="ot">&lt;-</span> <span class="fl">4.48</span></span>
-<span id="cb11-5"><a href=""></a>beta <span class="ot">&lt;-</span> <span class="fl">0.76</span></span>
-<span id="cb11-6"><a href=""></a>sigma2 <span class="ot">&lt;-</span> <span class="fl">81.14</span></span>
-<span id="cb11-7"><a href=""></a>sigma <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(sigma2)</span>
-<span id="cb11-8"><a href=""></a>tau <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> sigma2</span>
-<span id="cb11-9"><a href=""></a>J <span class="ot">&lt;-</span> <span class="dv">3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href=""></a>y <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">21</span>, <span class="dv">20</span>, <span class="dv">15</span>)</span>
+<span id="cb18-2"><a href=""></a>n <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">48</span>, <span class="dv">34</span>, <span class="dv">21</span>)</span>
+<span id="cb18-3"><a href=""></a>Z <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">30</span>, <span class="dv">50</span>)</span>
+<span id="cb18-4"><a href=""></a>alpha <span class="ot">&lt;-</span> <span class="fl">4.48</span></span>
+<span id="cb18-5"><a href=""></a>beta <span class="ot">&lt;-</span> <span class="fl">0.76</span></span>
+<span id="cb18-6"><a href=""></a>sigma2 <span class="ot">&lt;-</span> <span class="fl">81.14</span></span>
+<span id="cb18-7"><a href=""></a>sigma <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(sigma2)</span>
+<span id="cb18-8"><a href=""></a>tau <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> sigma2</span>
+<span id="cb18-9"><a href=""></a>J <span class="ot">&lt;-</span> <span class="dv">3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
-<div id="tabset-4-2">
-<div class="sourceCode" id="cb12"><pre class="sourceCode numberSource bugs number-lines code-with-copy"><code class="sourceCode"><span id="cb12-1"><a href=""></a>for(j in 1 : J) {</span>
-<span id="cb12-2"><a href=""></a>   y[j] ~ dbin(p[j], n[j])</span>
-<span id="cb12-3"><a href=""></a>   logit(p[j]) &lt;- theta[1] + theta[2] * X[j]</span>
-<span id="cb12-4"><a href=""></a>   X[j] ~ dnorm(mu[j], tau)</span>
-<span id="cb12-5"><a href=""></a>   mu[j] &lt;- alpha + beta * Z[j]</span>
-<span id="cb12-6"><a href=""></a>}</span>
-<span id="cb12-7"><a href=""></a>theta[1] ~ dnorm(0.0, 0.001)</span>
-<span id="cb12-8"><a href=""></a>theta[2] ~ dnorm(0.0, 0.001)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="tabset-5-2">
+<div class="sourceCode" id="cb19"><pre class="sourceCode numberSource bugs number-lines code-with-copy"><code class="sourceCode"><span id="cb19-1"><a href=""></a>for(j in 1 : J) {</span>
+<span id="cb19-2"><a href=""></a>   y[j] ~ dbin(p[j], n[j])</span>
+<span id="cb19-3"><a href=""></a>   logit(p[j]) &lt;- theta[1] + theta[2] * X[j]</span>
+<span id="cb19-4"><a href=""></a>   X[j] ~ dnorm(mu[j], tau)</span>
+<span id="cb19-5"><a href=""></a>   mu[j] &lt;- alpha + beta * Z[j]</span>
+<span id="cb19-6"><a href=""></a>}</span>
+<span id="cb19-7"><a href=""></a>theta[1] ~ dnorm(0.0, 0.001)</span>
+<span id="cb19-8"><a href=""></a>theta[2] ~ dnorm(0.0, 0.001)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="tabset-4-3">
+<div id="tabset-5-3">
 <div class="small">
-<div class="sourceCode" id="cb13"><pre class="sourceCode numberSource stan number-lines code-with-copy"><code class="sourceCode stan"><span id="cb13-1"><a href=""></a><span class="kw">data</span> {</span>
-<span id="cb13-2"><a href=""></a>  <span class="dt">real</span> alpha;</span>
-<span id="cb13-3"><a href=""></a>  <span class="dt">real</span> beta;</span>
-<span id="cb13-4"><a href=""></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; sigma2;</span>
-<span id="cb13-5"><a href=""></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; J;</span>
-<span id="cb13-6"><a href=""></a>  <span class="dt">array</span>[J] <span class="dt">int</span> y;</span>
-<span id="cb13-7"><a href=""></a>  <span class="dt">vector</span>[J] Z;</span>
-<span id="cb13-8"><a href=""></a>  <span class="dt">array</span>[J] <span class="dt">int</span> n;</span>
-<span id="cb13-9"><a href=""></a>}</span>
-<span id="cb13-10"><a href=""></a><span class="kw">transformed data</span> {</span>
-<span id="cb13-11"><a href=""></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; sigma;</span>
-<span id="cb13-12"><a href=""></a>  sigma = sqrt(sigma2);</span>
-<span id="cb13-13"><a href=""></a>}</span>
-<span id="cb13-14"><a href=""></a><span class="kw">parameters</span> {</span>
-<span id="cb13-15"><a href=""></a>  <span class="dt">real</span> theta1;</span>
-<span id="cb13-16"><a href=""></a>  <span class="dt">real</span> theta2;</span>
-<span id="cb13-17"><a href=""></a>  <span class="dt">vector</span>[J] X;</span>
-<span id="cb13-18"><a href=""></a>}</span>
-<span id="cb13-19"><a href=""></a><span class="kw">model</span> {</span>
-<span id="cb13-20"><a href=""></a>  <span class="dt">array</span>[J] <span class="dt">real</span> p;</span>
-<span id="cb13-21"><a href=""></a>  theta1 ~ normal(<span class="dv">0</span>, <span class="dv">32</span>); <span class="co">// 32^2 = 1024 </span></span>
-<span id="cb13-22"><a href=""></a>  theta2 ~ normal(<span class="dv">0</span>, <span class="dv">32</span>);</span>
-<span id="cb13-23"><a href=""></a>  X ~ normal(alpha + beta * Z, sigma);</span>
-<span id="cb13-24"><a href=""></a>  y ~ binomial_logit(n, theta1 + theta2 * X);</span>
-<span id="cb13-25"><a href=""></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode numberSource stan number-lines code-with-copy"><code class="sourceCode stan"><span id="cb20-1"><a href=""></a><span class="kw">data</span> {</span>
+<span id="cb20-2"><a href=""></a>  <span class="dt">real</span> alpha;</span>
+<span id="cb20-3"><a href=""></a>  <span class="dt">real</span> beta;</span>
+<span id="cb20-4"><a href=""></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; sigma2;</span>
+<span id="cb20-5"><a href=""></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; J;</span>
+<span id="cb20-6"><a href=""></a>  <span class="dt">array</span>[J] <span class="dt">int</span> y;</span>
+<span id="cb20-7"><a href=""></a>  <span class="dt">vector</span>[J] Z;</span>
+<span id="cb20-8"><a href=""></a>  <span class="dt">array</span>[J] <span class="dt">int</span> n;</span>
+<span id="cb20-9"><a href=""></a>}</span>
+<span id="cb20-10"><a href=""></a><span class="kw">transformed data</span> {</span>
+<span id="cb20-11"><a href=""></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; sigma;</span>
+<span id="cb20-12"><a href=""></a>  sigma = sqrt(sigma2);</span>
+<span id="cb20-13"><a href=""></a>}</span>
+<span id="cb20-14"><a href=""></a><span class="kw">parameters</span> {</span>
+<span id="cb20-15"><a href=""></a>  <span class="dt">real</span> theta1;</span>
+<span id="cb20-16"><a href=""></a>  <span class="dt">real</span> theta2;</span>
+<span id="cb20-17"><a href=""></a>  <span class="dt">vector</span>[J] X;</span>
+<span id="cb20-18"><a href=""></a>}</span>
+<span id="cb20-19"><a href=""></a><span class="kw">model</span> {</span>
+<span id="cb20-20"><a href=""></a>  <span class="dt">array</span>[J] <span class="dt">real</span> p;</span>
+<span id="cb20-21"><a href=""></a>  theta1 ~ normal(<span class="dv">0</span>, <span class="dv">32</span>); <span class="co">// 32^2 = 1024 </span></span>
+<span id="cb20-22"><a href=""></a>  theta2 ~ normal(<span class="dv">0</span>, <span class="dv">32</span>);</span>
+<span id="cb20-23"><a href=""></a>  X ~ normal(alpha + beta * Z, sigma);</span>
+<span id="cb20-24"><a href=""></a>  y ~ binomial_logit(n, theta1 + theta2 * X);</span>
+<span id="cb20-25"><a href=""></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
-<div id="tabset-4-4">
+<div id="tabset-5-4">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href=""></a>theta <span class="ot">&lt;-</span> <span class="fu">normal</span>(<span class="dv">0</span>, <span class="dv">32</span>, <span class="at">dim =</span> <span class="dv">2</span>)</span>
-<span id="cb14-2"><a href=""></a>mu <span class="ot">&lt;-</span> alpha <span class="sc">+</span> beta <span class="sc">*</span> Z</span>
-<span id="cb14-3"><a href=""></a>X <span class="ot">&lt;-</span> <span class="fu">normal</span>(mu, sigma)</span>
-<span id="cb14-4"><a href=""></a>p <span class="ot">&lt;-</span> <span class="fu">ilogit</span>(theta[<span class="dv">1</span>] <span class="sc">+</span> theta[<span class="dv">2</span>] <span class="sc">*</span> X)</span>
-<span id="cb14-5"><a href=""></a><span class="fu">distribution</span>(y) <span class="ot">&lt;-</span> <span class="fu">binomial</span>(n, p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href=""></a>theta <span class="ot">&lt;-</span> <span class="fu">normal</span>(<span class="dv">0</span>, <span class="dv">32</span>, <span class="at">dim =</span> <span class="dv">2</span>)</span>
+<span id="cb21-2"><a href=""></a>mu <span class="ot">&lt;-</span> alpha <span class="sc">+</span> beta <span class="sc">*</span> Z</span>
+<span id="cb21-3"><a href=""></a>X <span class="ot">&lt;-</span> <span class="fu">normal</span>(mu, sigma)</span>
+<span id="cb21-4"><a href=""></a>p <span class="ot">&lt;-</span> <span class="fu">ilogit</span>(theta[<span class="dv">1</span>] <span class="sc">+</span> theta[<span class="dv">2</span>] <span class="sc">*</span> X)</span>
+<span id="cb21-5"><a href=""></a><span class="fu">distribution</span>(y) <span class="ot">&lt;-</span> <span class="fu">binomial</span>(n, p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>

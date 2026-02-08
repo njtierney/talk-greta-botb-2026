@@ -248,7 +248,7 @@ m <- model(intercept, coef_flipper, coef_mass)
 include_graphics("images/gradient-based.png")
 ```
 
-## Using `mcmc`
+## Using `greta`
 
 :::{.panel-tabset}
 
@@ -289,7 +289,6 @@ draws_slice <- mcmc(m, sampler = slice())
 
 ```{r}
 #| eval: false
-#| code-line-numbers: "|2|3|4|5|6|7-10"
 draws <- mcmc(m,
               n_samples = 1000,
               thin = 10,
@@ -303,10 +302,104 @@ draws <- mcmc(m,
               )
 ```
 
+:::
+
+## {greta} integrattions
+
+```{r}
+#| label: run-model
+#| echo: false
+library(palmerpenguins)
+library(tidyverse)
+library(bayesplot)
+
+penguins_for_modelling <- penguins |>
+  # remove missing value records
+  drop_na() |>
+  # rescale the length and mass variables to make the coefficient priors easier
+  # to define
+  mutate(
+    across(
+      c(bill_length_mm, bill_depth_mm, flipper_length_mm, body_mass_g),
+      .fns = list(scaled = \(x) scale(x))
+    ),
+    # code the sex as per a Bernoulli distribution
+    is_female_numeric = if_else(sex == "female", 1, 0),
+    .after = island
+  )
+
+library(greta)
+
+# define priors
+intercept <- normal(0, 10)
+coef_flipper_length <- normal(0, 10)
+coef_body_mass <- normal(0, 10)
+
+# define linear predictor
+eta <- intercept +
+  coef_flipper_length * penguins_for_modelling$flipper_length_mm_scaled +
+  coef_body_mass * penguins_for_modelling$body_mass_g_scaled
+
+# apply link function
+probability_female <- ilogit(eta)
+
+# define likelihood
+y <- as_data(penguins_for_modelling$is_female_numeric)
+distribution(y) <- bernoulli(probability_female)
+
+# combine into a model object
+m <- model(intercept, coef_flipper_length, coef_body_mass)
+# do MCMC - 4 chains, 1000 on each after 1000 warmuup (default is 2 chains)
+draws <- mcmc(
+  m,
+  sampler = hmc(),
+  n_samples = 1000,
+  warmup = 1000,
+  chains = 4,
+  n_cores = 3
+)
+```
+
+
+::: {.panel-tabset}
+
+## summary
+
+```{r}
+summary(draws)
+```
+
+
+## coda
+
+```{r}
+#| fig-height: 4
+plot(draws)
+```
+
+## traceplot
+
+```{r}
+#| fig-height: 4
+bayesplot::mcmc_trace(draws)
+```
+
+## density
+
+```{r}
+#| fig-height: 4
+bayesplot::mcmc_dens(draws)
+```
+
+## diagnostics 
+
+```{r}
+coda::gelman.diag(draws, autoburnin = FALSE, multivariate = FALSE)
+```
 
 :::
 
-## Extendable
+## {greta} is Extendable
 
 ```{r}
 #| label: extendable2
@@ -318,16 +411,16 @@ include_graphics("images/greta-extendable.png")
 
 :::{.columns}
 
-:::{.column width="50%"}
+:::{.column width="45%"}
 
-> `greta.gam` lets you use [mgcv](https://CRAN.R-project.org/package=mgcv)’s
+> Use [mgcv](https://CRAN.R-project.org/package=mgcv)
 smoother functions and formula syntax to define smooth terms for use in
-a [greta](https://greta-stats.org/) model. You can then define your own
-likelihood to complete the model, and fit it by MCMC.
+a [greta](https://greta-stats.org/) model. Define your
+likelihood, fit with MCMC.
 
 :::
 
-:::{.column width="50%"}
+:::{.column width="55%"}
 
 ```{r}
 #| echo: false
@@ -358,18 +451,18 @@ plot(mgcv_fit,
 
 ``` r
 linear_predictor <- smooths(~ s(x2), data = dat)
-# specify the distribution of the response
+
 dist_sd <- cauchy(0, 1, truncation = c(0, Inf))
 distribution(dat$y) <- normal(mean = linear_predictor, sd = dist_sd)
-# make some prediction data
+
 pred_dat <- data.frame(x2 = seq(0, 1, length.out = 100))
-# run `evaluate_smooths` on the linear predictor
+
 linear_preds <- evaluate_smooths(linear_predictor, newdata = pred_dat)
-# Specify as model object, fit with MCMC as we do with greta normally
+
 m <- model(linear_preds)
-# draw from the posterior
+
 draws <- mcmc(m, n_samples = 200, verbose = FALSE)
-# add in a line for each posterior sample
+
 apply(draws[[1]], 1, lines, x = pred_dat$x2, 
       col = adjustcolor("firebrick", alpha.f = 0.1))
 points(dat$x2, dat$y, pch = 19, cex = 0.2)
@@ -389,6 +482,97 @@ points(dat$x2, dat$y, pch = 19, cex = 0.2)
 - Samplers for big data
 - HMC Snaper
 - Extension packages (lme-like formula, more distributions, point processes)
+
+## Why 'greta' ?
+
+::::: columns
+::: {.column width="60%"}
+Grete Hermann (1901 - 1984)
+
+wrote the first algorithms for computer algebra
+
+... without a computer
+
+(To avoid people saying 'greet', the package is spelled *greta* instead)
+:::
+
+::: {.column width="40%"}
+```{r show-grete, out.width = "75%", echo = FALSE}
+include_graphics("images/grete-hermann-smile.png")
+```
+:::
+:::::
+
+# Modelling Penguins with `palmerpenguins` {background-color="white"}
+
+![](images/lter_penguins.png)
+
+## Our Turn: Modelling Penguins! {.smaller}
+
+:::{.columns}
+
+:::{.column width="40%"}
+
+![](images/palmerpenguins.png)
+
+:::
+
+
+:::{.column width="60%"}
+
+
+* Build a model to predict the sex of an individual penguin based on measurements of that individual.
+* This is a thing people do - see ["Ecological Sexual Dimorphism and Environmental Variability within a Community of Antarctic Penguins (Genus Pygoscelis)"](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0090081) by Gorman et al., 2014.
+* The `penguins` dataset is now also in base R 4.5.0! (With slight differences, see [njtierney.com/post/2025/04/14/r-version-4-5-0-is-out/](https://www.njtierney.com/post/2025/04/14/r-version-4-5-0-is-out/))
+
+:::
+
+:::
+
+## Our Turn: Modelling Penguins! {.smaller}
+
+:::{.columns}
+
+:::{.column width="50%"}
+
+- Predict probability of a penguin being female, based on flipper length, and body mass.
+- Demonstrate greta workflow: 
+  - DAG plot
+  - `calculate()` for simulations
+  - integrates with `coda` and `bayesplot`
+
+:::
+
+:::{.column width="50%"}
+
+$$
+\begin{aligned}
+\beta_0, \beta_1, \beta_2 &\sim \text{Normal}(0, 10) \\
+\eta_i &= \beta_0 + \\
+&\beta_1 \cdot \text{flipper}_i + \\
+&\beta_2 \cdot \text{mass}_i \\
+\text{logit}(p_i) &= \eta_i \\
+y_i &\sim \text{Bernoulli}(p_i), \\
+i &= 1, \ldots, N
+\end{aligned}
+$$
+
+:::
+
+:::
+
+## Our turn: posit.cloud {.small}
+
+```{r}
+#| echo: false
+cloud_link <- qrcode::qr_code("https://posit.cloud/spaces/749995/join?access_code=nwqtNUNzpeSkfAgWHbgUNiba_Hm4fuggJSQqhDU3")
+plot(cloud_link)
+```
+
+* Sign in with a github/google
+* Follow along with me
+* Or run locally from [github.com/greta-dev/greta-botb26-workshop](https://github.com/greta-dev/greta-botb26-workshop)
+
 
 ## Resources 
 
@@ -414,36 +598,6 @@ install.packages("greta",
 ```
 
 :::
-
-
-## Why 'greta' ?
-
-::::: columns
-::: {.column width="60%"}
-Grete Hermann (1901 - 1984)
-
-wrote the first algorithms for computer algebra
-
-... without a computer
-
-(To avoid people saying 'greet', the package is spelled *greta* instead)
-:::
-
-::: {.column width="40%"}
-```{r show-grete, out.width = "75%", echo = FALSE}
-include_graphics("images/grete-hermann-smile.png")
-```
-:::
-:::::
-
-# Our turn
-
-Go to
-
-LINK
-
-- Sign in with a github account or google account
-- Follow along with me
 
 
 
