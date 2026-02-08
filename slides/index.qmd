@@ -1,7 +1,7 @@
 ---
-title: "Getting Started with Bayesian Modelling in greta: A Practical Introduction**"
+title: "A Practical Introduction to Bayesian Modelling with `{greta}`"
 subtitle: "Bayes on the Beach<br>2026-02-09"
-author: "Nicholas Tierney & Nick Golding"
+author: "Nicholas Tierney"
 institute: "Statistical Consultant<br>nipaluna, lutruwita (Hobart, Tasmania)"
 format:
   revealjs:
@@ -31,6 +31,8 @@ library(naniar)
 library(tidyverse)
 library(ggrain)
 library(tinytable)
+library(greta)
+greta_sitrep()
 ```
 
 ```{r}
@@ -66,31 +68,424 @@ theme_set(
 
 ```
 
-# Audience
+## Who am I? The story so far
 
-1. You want to implement a Bayesian model.
-1. 
+-   **2008-2012**: Undergrad + honours in Psychology \@ UQ
 
-# Outline
+-   **2013-2017**: PhD Statistics \@ QUT
+    -   EDA / Bayesian / Geospatial / Optimal placement
 
-1. Motivation for "greta"
-1. Why "greta"
-1. History of greta
-1. R is a glue language.
-1. R is a language for writing Domain Specific Languages.
-1. {greta} is an R based solution for writing statistical models.
-1. Getting started with greta.
+-   **2017 - 2020**: Research Fellow / Lecturer \@ Monash
 
+    -   Design EDA R packages: [`visdat`](), [`naniar`](), [`brolgar`]()
+
+-   **2021 - 2025**: **Research Software Engineer** \@ The Kids
+
+    -   Maintain and design R packages: [`greta`](), [`conmat`]()
+
+-   **2025 - **: Statistical Consultant
+
+    -   Statistical modelling, software, teaching, code review
+    
+:::{.notes}
+-   Maintain Statistical Software (like greta)
+
+-   Translate econometric models from code --> R package
+
+-   Extend epidemiological modelling software
+
+-   Provide code review to researchers
+
+-   Translate Models of urban biodiversity --> R packages
+
+-   Develop colour palettes, ggplot themes, automation
+
+:::
+    
+
+# ❤️ Hiking! `njt.micro.blog`
+
+![](images/pct-collage.jpg){background-size="75%"}
+
+<!-- ##  {background-image="img/pct-collage.jpg" background-size="75%"} -->
 
 ##  {background-image="images/greta-logo-background.png" background-size="contain"}
 
-## greta is R code
+##  {background-image="images/idem-lab.png" background-size="contain"}
+
+## Designing modelling interfaces is (NP) hard
+
+:::: columns
+
+::: {.column width="60%"}
+
+Nick Golding (right) created {greta} in 2016, to express statistical models in R, while taking advantage of Google `Tensorflow`:
+
+  -  automatic differentiation
+  -  efficient linear algebra
+  -  highly parallel
+  -  new samplers (SNAPER-HMC)
+
+:::
+
+::: {.column width="40%"}
+
+![](images/nick-golding.jpeg){width="80%"}
+
+:::
+
+::::
+
+
+---
+
+
+## A penguins model {.smaller}
+
+:::: {.columns}
+::: {.column width="40%"}
+$$
+\begin{aligned}
+\beta_0, \beta_1, \beta_2 &\sim \text{Normal}(0, 10) \\
+\eta_i &= \beta_0 + \\
+&\beta_1 \cdot \text{flipper}_i + \\
+&\beta_2 \cdot \text{mass}_i \\
+\text{logit}(p_i) &= \eta_i \\
+y_i &\sim \text{Bernoulli}(p_i), \\
+i &= 1, \ldots, N
+\end{aligned}
+$$
+:::
+
+::: {.column width="60%"}
+::: {.panel-tabset}
+
+## JAGS
+
+```{r}
+#| eval: false
+model {
+  # Priors
+  # precision = 1/variance = 1/100
+  intercept ~ dnorm(0, 0.001)  
+  coef_flipper ~ dnorm(0, 0.001)
+  coef_mass ~ dnorm(0, 0.001)
+  
+  # Likelihood
+  for(i in 1:N) {
+    logit(probability_female[i]) <- intercept + 
+          coef_flipper * flipper_length_mm[i] +
+          coef_mass * body_mass_g[i]
+    y[i] ~ dbern(probability_female[i])
+  }
+}
+```
+
+## STAN
+
+```r
+data {
+  int<lower=0> N;
+  vector[N] flipper_length_mm;
+  vector[N] body_mass_g;
+  array[N] int<lower=0,upper=1> y;
+}
+parameters {
+  real intercept;
+  real coef_flipper;
+  real coef_mass;
+}
+model {
+  // Priors
+  intercept ~ normal(0, 10);
+  coef_flipper ~ normal(0, 10);
+  coef_mass ~ normal(0, 10);
+  
+  // Likelihood (vectorized)
+  y ~ bernoulli_logit(intercept + 
+                      coef_flipper * flipper_length_mm +
+                      coef_mass * body_mass_g);
+}
+```
+
+## greta
+
+```{r}
+#| eval: false
+# Priors
+intercept <- normal(0, 10)
+coef_flipper <- normal(0, 10)
+coef_mass <- normal(0, 10)
+
+# Linear predictor
+eta <- intercept + 
+  coef_flipper * flipper_length_mm + 
+  coef_mass * body_mass_g
+
+# Link function
+probability_female <- ilogit(eta)
+
+# Likelihood
+y <- as_data(is_female_numeric)
+distribution(y) <- bernoulli(probability_female)
+m <- model(intercept, coef_flipper, coef_mass)
+```
+
+:::
+
+:::
+::::
+
+
+# {background-image="images/greta-vs-stan-jags.png" background-size="65%"}
+
+
+## Default: Gradient-based inference
+
+```{r}
+#| label: gradient-based
+#| echo: false
+include_graphics("images/gradient-based.png")
+```
+
+## Using `mcmc`
+
+:::{.panel-tabset}
+
+## Model prep
+
+```{r}
+#| label: run-greta-model
+#| eval: false
+# Priors
+intercept <- normal(0, 10)
+coef_flipper <- normal(0, 10)
+coef_mass <- normal(0, 10)
+
+# Linear predictor
+eta <- intercept + 
+  coef_flipper * flipper_length_mm + 
+  coef_mass * body_mass_g
+
+# Link function
+probability_female <- ilogit(eta)
+
+# Likelihood
+y <- as_data(is_female_numeric)
+distribution(y) <- bernoulli(probability_female)
+m <- model(p, theta)
+```
+
+## Samplers
+
+```{r}
+#| eval: false
+draws_hmc <- mcmc(m, sampler = hmc()) # default
+draws_rwmh <- mcmc(m, sampler = rwmh())
+draws_slice <- mcmc(m, sampler = slice())
+```
+
+## Other options
+
+```{r}
+#| eval: false
+#| code-line-numbers: "|2|3|4|5|6|7-10"
+draws <- mcmc(m,
+              n_samples = 1000,
+              thin = 10,
+              warmup = 1000,
+              chains = 16,
+              n_cores = 6,
+              initial_values = initials(
+                p = 0,
+                theta = 100
+              )
+              )
+```
+
+
+:::
+
+## Extendable
+
+```{r}
+#| label: extendable2
+#| echo: false
+include_graphics("images/greta-extendable.png")
+```
+
+# `greta.gam`
+
+:::{.columns}
+
+:::{.column width="50%"}
+
+> `greta.gam` lets you use [mgcv](https://CRAN.R-project.org/package=mgcv)’s
+smoother functions and formula syntax to define smooth terms for use in
+a [greta](https://greta-stats.org/) model. You can then define your own
+likelihood to complete the model, and fit it by MCMC.
+
+:::
+
+:::{.column width="50%"}
+
+```{r}
+#| echo: false
+#| include: false
+library(mgcv)
+set.seed(2024 - 12 - 12)
+# simulate some data...
+dat <- gamSim(1, n = 400, dist = "normal", scale = 0.3)
+```
+
+```{r}
+mgcv_fit <- gam(y ~ s(x2), 
+                data = dat)
+plot(mgcv_fit, 
+     scheme = 1, 
+     shift = coef(mgcv_fit)[1])
+```
+
+:::
+
+:::
+
+## `greta.gam`
+
+:::{.panel-tabset}
+
+## code
+
+``` r
+linear_predictor <- smooths(~ s(x2), data = dat)
+# specify the distribution of the response
+dist_sd <- cauchy(0, 1, truncation = c(0, Inf))
+distribution(dat$y) <- normal(mean = linear_predictor, sd = dist_sd)
+# make some prediction data
+pred_dat <- data.frame(x2 = seq(0, 1, length.out = 100))
+# run `evaluate_smooths` on the linear predictor
+linear_preds <- evaluate_smooths(linear_predictor, newdata = pred_dat)
+# Specify as model object, fit with MCMC as we do with greta normally
+m <- model(linear_preds)
+# draw from the posterior
+draws <- mcmc(m, n_samples = 200, verbose = FALSE)
+# add in a line for each posterior sample
+apply(draws[[1]], 1, lines, x = pred_dat$x2, 
+      col = adjustcolor("firebrick", alpha.f = 0.1))
+points(dat$x2, dat$y, pch = 19, cex = 0.2)
+```
+
+## plot
+
+![](images/greta-gam-mcmc.png)
+
+
+:::
+
+## Future Features
+
+- Marginalisation (discrete, laplace, variational)
+- Discrete Samplers
+- Samplers for big data
+- HMC Snaper
+- Extension packages (lme-like formula, more distributions, point processes)
+
+## Why 'greta' ?
 
 ::::: columns
-::: {.column width="45%"}
-**stan**
+::: {.column width="60%"}
+Grete Hermann (1901 - 1984)
 
+wrote the first algorithms for computer algebra
+
+... without a computer
+
+(To avoid people saying 'greet', the package is spelled *greta* instead)
+:::
+
+::: {.column width="40%"}
+```{r show-grete, out.width = "75%", echo = FALSE}
+include_graphics("images/grete-hermann-smile.png")
 ```
+:::
+:::::
+
+
+
+# {background-image="images/standards.png" background-size="contain"}
+
+# Our turn
+
+Go to
+
+LINK
+
+- Sign in with a github account or google account
+- Follow along with me
+
+
+# Extras
+
+
+
+## The WinBUGS example: Air {.smaller}
+
+Air analyses reported respiratory illness versus exposure to nitrogen dioxide in 103 children. The parameters `alpha`, `beta` and `sigma2` are known in advance, and the data are grouped into three categories.
+
+
+
+::::: columns
+::: {.column width="40%"}
+**Mathematical Model:**
+
+$$
+\begin{aligned}
+\theta_1, \theta_2 &\sim \text{Normal}(0, 32) \\
+\mu_j &= \alpha + \beta Z_j \\
+X_j &\sim \text{Normal}(\mu_j, \sigma) \\
+\text{logit}(p_j) &= \theta_1 + \theta_2 X_j \\
+y_j &\sim \text{Binomial}(n_j, p_j) \\
+j &= 1, \ldots, J \\
+\end{aligned}
+$$
+
+:::
+
+::: {.column width="60%"}
+:::{.panel-tabset}
+
+## Data
+
+```{r}
+y <- c(21, 20, 15)
+n <- c(48, 34, 21)
+Z <- c(10, 30, 50)
+alpha <- 4.48
+beta <- 0.76
+sigma2 <- 81.14
+sigma <- sqrt(sigma2)
+tau <- 1 / sigma2
+J <- 3
+```
+
+
+## JAGS
+
+```{.bugs}
+for(j in 1 : J) {
+   y[j] ~ dbin(p[j], n[j])
+   logit(p[j]) <- theta[1] + theta[2] * X[j]
+   X[j] ~ dnorm(mu[j], tau)
+   mu[j] <- alpha + beta * Z[j]
+}
+theta[1] ~ dnorm(0.0, 0.001)
+theta[2] ~ dnorm(0.0, 0.001)
+```
+
+## STAN
+
+:::{.small}
+```{.stan}
 data {
   real alpha;
   real beta;
@@ -111,7 +506,7 @@ parameters {
 }
 model {
   array[J] real p;
-  theta1 ~ normal(0, 32); // 32^2 = 1024
+  theta1 ~ normal(0, 32); // 32^2 = 1024 
   theta2 ~ normal(0, 32);
   X ~ normal(alpha + beta * Z, sigma);
   y ~ binomial_logit(n, theta1 + theta2 * X);
@@ -119,23 +514,10 @@ model {
 ```
 :::
 
-::: {.column width="55%"}
-**JAGS**
+## greta
 
-```
-for(j in 1 : J) {
-   y[j] ~ dbin(p[j], n[j])
-   logit(p[j]) <- theta[1] + theta[2] * X[j]
-   X[j] ~ dnorm(mu[j], tau)
-   mu[j] <- alpha + beta * Z[j]
-}
-theta[1] ~ dnorm(0.0, 0.001)
-theta[2] ~ dnorm(0.0, 0.001)
-```
-
-**greta**
-
-``` r
+```{r}
+#| eval: false
 theta <- normal(0, 32, dim = 2)
 mu <- alpha + beta * Z
 X <- normal(mu, sigma)
@@ -143,126 +525,6 @@ p <- ilogit(theta[1] + theta[2] * X)
 distribution(y) <- binomial(n, p)
 ```
 :::
-:::::
 
-
-
-## Why 'greta' ?
-
-::::: columns
-::: {.column width="50%"}
-Grete Hermann (1901 - 1984)
-
-wrote the first algorithms for computer algebra
-
-... without a computer
-
-(To avoid people saying 'greet', the package is spelled *greta* instead)
-:::
-
-::: {.column width="50%"}
-```{r show-grete, out.width = "60%"}
-include_graphics("images/grete-hermann.jpeg")
-```
-:::
-:::::
-
-
-# {greta}: some history 
-
-- 2016: Nick Golding creates
-
-# {background-image="images/standards.png" background-size="contain"}
-
-
-
-<!-- Professor Nick Golding -->
-
-<!-- [greta-stats.org](https://www.greta-stats.org) -->
-
-# google tensorflow
-
-::::: columns
-::: {.column width="45%"}
--   automatic differentiation
--   efficient linear algebra
--   highly parallel
-:::
-
-::: {.column width="45%"}
-```{r}
-#| label: tf-examples
-include_graphics("images/tf-examples.jpg")
-```
-:::
-:::::
-
-## extendable
-
-```{r}
-#| label: extendable
-include_graphics("images/greta-extendable.png")
-```
-
-# `greta.gp`
-
-> `greta.gp` extends `greta` to let you define Gaussian processes as part of your model. It provides a syntax to create and combine GP kernels, and use them to define either full rank or sparse Gaussian processes.
-
-::::: columns
-::: {.column width="60%"}
-``` r
-# kernel & GP
-kernel <- rbf(rbf_len, rbf_var) +
-            bias(1)
-f <- gp(x, kernel)
-# likelihood
-distribution(y) <- normal(f, obs_sd)
-# prediction
-f_plot <- project(f, x_plot)
-```
-:::
-
-::: {.column width="38%"}
-```{r extendable-greta-gp}
-include_graphics("images/greta-extendable-gp.png")
-```
-:::
-:::::
-
-## What greta looks like
-
-::::: columns
-::: {.column width="50%"}
-$$
-\alpha \sim Normal(0, 5)
-$$
-
-$$
-\beta \sim Normal(0, 3)
-$$
-
-$$
-\sigma \sim logNormal(0, 5)
-$$ $$
-\mu = \alpha + \beta X
-$$
-
-$$
-Y \sim Normal(\mu, \sigma)
-$$
-:::
-
-::: {.column width="50%"}
-```{r greta-show, eval = FALSE, echo = TRUE}
-x <- penguins$bill_length_mm
-y <- penguins$flipper_length_mm
-alpha <- normal(0,5)
-beta <- normal(0,3)
-sd <- lognormal(0,3)
-mu <- alpha + coef * x
-distribution(y) <- normal(mu, sd)
-m <- model(mu, beta, sd)
-draws <- mcmc(m)
-```
 :::
 :::::

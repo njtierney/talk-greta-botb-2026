@@ -1,0 +1,27 @@
+/*-- scss:defaults --*/
+$custom-col: #f0a800;
+
+$presentation-h1-font-size: 2em;
+
+/*-- scss:rules --*/
+
+.reveal strong {
+  color: $custom-col;
+}
+
+.tiny {
+  font-size: 0.6em;
+}
+
+.small {
+  font-size: 0.75em;
+}
+
+.reveal .columns .column {
+  overflow-wrap: break-word;
+}
+
+.reveal .MathJax {
+  max-width: 100%;
+  overflow-x: auto;
+}
