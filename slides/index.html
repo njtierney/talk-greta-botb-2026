@@ -492,6 +492,24 @@ i &amp;= 1, \ldots, N
 <li class="fragment">Extension packages (lme-like formula, more distributions, point processes)</li>
 </ul>
 </section>
+<section id="resources" class="slide level2">
+<h2>Resources</h2>
+<ul>
+<li><strong>github:</strong> <a href="https://github.com/greta-dev/greta">github.com/greta-dev/greta</a></li>
+<li><strong>Docs:</strong> <a href="https://greta-stats.org">greta-stats.org</a></li>
+<li><strong>Help:</strong> <a href="https://forum.greta-stats.org/">https://forum.greta-stats.org/</a></li>
+</ul>
+<p>Install: (not currently on CRAN - soon to be amended!)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href=""></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"greta-dev/greta"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Or via the <a href="https://greta-dev.r-universe.dev/builds">r-universe</a></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href=""></a><span class="fu">install.packages</span>(<span class="st">"greta"</span>, </span>
+<span id="cb10-2"><a href=""></a>                 <span class="at">repos =</span> <span class="fu">c</span>(<span class="st">"https://greta-dev.r-universe.dev"</span>,</span>
+<span id="cb10-3"><a href=""></a>                           <span class="st">"https://cloud.r-project.org"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
 <section id="why-greta" class="slide level2">
 <h2>Why ‘greta’ ?</h2>
 <div class="columns">
@@ -512,11 +530,6 @@ i &amp;= 1, \ldots, N
 </div>
 </div></div>
 </section></section>
-<section id="section-3" class="title-slide slide level1 center" data-background-image="images/standards.png" data-background-size="contain">
-<h1></h1>
-
-</section>
-
 <section id="our-turn" class="title-slide slide level1 center">
 <h1>Our turn</h1>
 <p>Go to</p>
@@ -527,9 +540,14 @@ i &amp;= 1, \ldots, N
 </ul>
 </section>
 
-<section>
 <section id="extras" class="title-slide slide level1 center">
 <h1>Extras</h1>
+
+</section>
+
+<section>
+<section id="section-3" class="title-slide slide level1 center" data-background-image="images/standards.png" data-background-size="contain">
+<h1></h1>
 
 </section>
 <section id="the-winbugs-example-air" class="slide level2 smaller">
@@ -554,63 +572,63 @@ j &amp;= 1, \ldots, J \\
 <div class="tab-content">
 <div id="tabset-4-1">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href=""></a>y <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">21</span>, <span class="dv">20</span>, <span class="dv">15</span>)</span>
-<span id="cb9-2"><a href=""></a>n <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">48</span>, <span class="dv">34</span>, <span class="dv">21</span>)</span>
-<span id="cb9-3"><a href=""></a>Z <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">30</span>, <span class="dv">50</span>)</span>
-<span id="cb9-4"><a href=""></a>alpha <span class="ot">&lt;-</span> <span class="fl">4.48</span></span>
-<span id="cb9-5"><a href=""></a>beta <span class="ot">&lt;-</span> <span class="fl">0.76</span></span>
-<span id="cb9-6"><a href=""></a>sigma2 <span class="ot">&lt;-</span> <span class="fl">81.14</span></span>
-<span id="cb9-7"><a href=""></a>sigma <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(sigma2)</span>
-<span id="cb9-8"><a href=""></a>tau <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> sigma2</span>
-<span id="cb9-9"><a href=""></a>J <span class="ot">&lt;-</span> <span class="dv">3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href=""></a>y <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">21</span>, <span class="dv">20</span>, <span class="dv">15</span>)</span>
+<span id="cb11-2"><a href=""></a>n <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">48</span>, <span class="dv">34</span>, <span class="dv">21</span>)</span>
+<span id="cb11-3"><a href=""></a>Z <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">30</span>, <span class="dv">50</span>)</span>
+<span id="cb11-4"><a href=""></a>alpha <span class="ot">&lt;-</span> <span class="fl">4.48</span></span>
+<span id="cb11-5"><a href=""></a>beta <span class="ot">&lt;-</span> <span class="fl">0.76</span></span>
+<span id="cb11-6"><a href=""></a>sigma2 <span class="ot">&lt;-</span> <span class="fl">81.14</span></span>
+<span id="cb11-7"><a href=""></a>sigma <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(sigma2)</span>
+<span id="cb11-8"><a href=""></a>tau <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> sigma2</span>
+<span id="cb11-9"><a href=""></a>J <span class="ot">&lt;-</span> <span class="dv">3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <div id="tabset-4-2">
-<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource bugs number-lines code-with-copy"><code class="sourceCode"><span id="cb10-1"><a href=""></a>for(j in 1 : J) {</span>
-<span id="cb10-2"><a href=""></a>   y[j] ~ dbin(p[j], n[j])</span>
-<span id="cb10-3"><a href=""></a>   logit(p[j]) &lt;- theta[1] + theta[2] * X[j]</span>
-<span id="cb10-4"><a href=""></a>   X[j] ~ dnorm(mu[j], tau)</span>
-<span id="cb10-5"><a href=""></a>   mu[j] &lt;- alpha + beta * Z[j]</span>
-<span id="cb10-6"><a href=""></a>}</span>
-<span id="cb10-7"><a href=""></a>theta[1] ~ dnorm(0.0, 0.001)</span>
-<span id="cb10-8"><a href=""></a>theta[2] ~ dnorm(0.0, 0.001)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode numberSource bugs number-lines code-with-copy"><code class="sourceCode"><span id="cb12-1"><a href=""></a>for(j in 1 : J) {</span>
+<span id="cb12-2"><a href=""></a>   y[j] ~ dbin(p[j], n[j])</span>
+<span id="cb12-3"><a href=""></a>   logit(p[j]) &lt;- theta[1] + theta[2] * X[j]</span>
+<span id="cb12-4"><a href=""></a>   X[j] ~ dnorm(mu[j], tau)</span>
+<span id="cb12-5"><a href=""></a>   mu[j] &lt;- alpha + beta * Z[j]</span>
+<span id="cb12-6"><a href=""></a>}</span>
+<span id="cb12-7"><a href=""></a>theta[1] ~ dnorm(0.0, 0.001)</span>
+<span id="cb12-8"><a href=""></a>theta[2] ~ dnorm(0.0, 0.001)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="tabset-4-3">
 <div class="small">
-<div class="sourceCode" id="cb11"><pre class="sourceCode numberSource stan number-lines code-with-copy"><code class="sourceCode stan"><span id="cb11-1"><a href=""></a><span class="kw">data</span> {</span>
-<span id="cb11-2"><a href=""></a>  <span class="dt">real</span> alpha;</span>
-<span id="cb11-3"><a href=""></a>  <span class="dt">real</span> beta;</span>
-<span id="cb11-4"><a href=""></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; sigma2;</span>
-<span id="cb11-5"><a href=""></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; J;</span>
-<span id="cb11-6"><a href=""></a>  <span class="dt">array</span>[J] <span class="dt">int</span> y;</span>
-<span id="cb11-7"><a href=""></a>  <span class="dt">vector</span>[J] Z;</span>
-<span id="cb11-8"><a href=""></a>  <span class="dt">array</span>[J] <span class="dt">int</span> n;</span>
-<span id="cb11-9"><a href=""></a>}</span>
-<span id="cb11-10"><a href=""></a><span class="kw">transformed data</span> {</span>
-<span id="cb11-11"><a href=""></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; sigma;</span>
-<span id="cb11-12"><a href=""></a>  sigma = sqrt(sigma2);</span>
-<span id="cb11-13"><a href=""></a>}</span>
-<span id="cb11-14"><a href=""></a><span class="kw">parameters</span> {</span>
-<span id="cb11-15"><a href=""></a>  <span class="dt">real</span> theta1;</span>
-<span id="cb11-16"><a href=""></a>  <span class="dt">real</span> theta2;</span>
-<span id="cb11-17"><a href=""></a>  <span class="dt">vector</span>[J] X;</span>
-<span id="cb11-18"><a href=""></a>}</span>
-<span id="cb11-19"><a href=""></a><span class="kw">model</span> {</span>
-<span id="cb11-20"><a href=""></a>  <span class="dt">array</span>[J] <span class="dt">real</span> p;</span>
-<span id="cb11-21"><a href=""></a>  theta1 ~ normal(<span class="dv">0</span>, <span class="dv">32</span>); <span class="co">// 32^2 = 1024 </span></span>
-<span id="cb11-22"><a href=""></a>  theta2 ~ normal(<span class="dv">0</span>, <span class="dv">32</span>);</span>
-<span id="cb11-23"><a href=""></a>  X ~ normal(alpha + beta * Z, sigma);</span>
-<span id="cb11-24"><a href=""></a>  y ~ binomial_logit(n, theta1 + theta2 * X);</span>
-<span id="cb11-25"><a href=""></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode numberSource stan number-lines code-with-copy"><code class="sourceCode stan"><span id="cb13-1"><a href=""></a><span class="kw">data</span> {</span>
+<span id="cb13-2"><a href=""></a>  <span class="dt">real</span> alpha;</span>
+<span id="cb13-3"><a href=""></a>  <span class="dt">real</span> beta;</span>
+<span id="cb13-4"><a href=""></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; sigma2;</span>
+<span id="cb13-5"><a href=""></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; J;</span>
+<span id="cb13-6"><a href=""></a>  <span class="dt">array</span>[J] <span class="dt">int</span> y;</span>
+<span id="cb13-7"><a href=""></a>  <span class="dt">vector</span>[J] Z;</span>
+<span id="cb13-8"><a href=""></a>  <span class="dt">array</span>[J] <span class="dt">int</span> n;</span>
+<span id="cb13-9"><a href=""></a>}</span>
+<span id="cb13-10"><a href=""></a><span class="kw">transformed data</span> {</span>
+<span id="cb13-11"><a href=""></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span>=<span class="dv">0</span>&gt; sigma;</span>
+<span id="cb13-12"><a href=""></a>  sigma = sqrt(sigma2);</span>
+<span id="cb13-13"><a href=""></a>}</span>
+<span id="cb13-14"><a href=""></a><span class="kw">parameters</span> {</span>
+<span id="cb13-15"><a href=""></a>  <span class="dt">real</span> theta1;</span>
+<span id="cb13-16"><a href=""></a>  <span class="dt">real</span> theta2;</span>
+<span id="cb13-17"><a href=""></a>  <span class="dt">vector</span>[J] X;</span>
+<span id="cb13-18"><a href=""></a>}</span>
+<span id="cb13-19"><a href=""></a><span class="kw">model</span> {</span>
+<span id="cb13-20"><a href=""></a>  <span class="dt">array</span>[J] <span class="dt">real</span> p;</span>
+<span id="cb13-21"><a href=""></a>  theta1 ~ normal(<span class="dv">0</span>, <span class="dv">32</span>); <span class="co">// 32^2 = 1024 </span></span>
+<span id="cb13-22"><a href=""></a>  theta2 ~ normal(<span class="dv">0</span>, <span class="dv">32</span>);</span>
+<span id="cb13-23"><a href=""></a>  X ~ normal(alpha + beta * Z, sigma);</span>
+<span id="cb13-24"><a href=""></a>  y ~ binomial_logit(n, theta1 + theta2 * X);</span>
+<span id="cb13-25"><a href=""></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <div id="tabset-4-4">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href=""></a>theta <span class="ot">&lt;-</span> <span class="fu">normal</span>(<span class="dv">0</span>, <span class="dv">32</span>, <span class="at">dim =</span> <span class="dv">2</span>)</span>
-<span id="cb12-2"><a href=""></a>mu <span class="ot">&lt;-</span> alpha <span class="sc">+</span> beta <span class="sc">*</span> Z</span>
-<span id="cb12-3"><a href=""></a>X <span class="ot">&lt;-</span> <span class="fu">normal</span>(mu, sigma)</span>
-<span id="cb12-4"><a href=""></a>p <span class="ot">&lt;-</span> <span class="fu">ilogit</span>(theta[<span class="dv">1</span>] <span class="sc">+</span> theta[<span class="dv">2</span>] <span class="sc">*</span> X)</span>
-<span id="cb12-5"><a href=""></a><span class="fu">distribution</span>(y) <span class="ot">&lt;-</span> <span class="fu">binomial</span>(n, p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href=""></a>theta <span class="ot">&lt;-</span> <span class="fu">normal</span>(<span class="dv">0</span>, <span class="dv">32</span>, <span class="at">dim =</span> <span class="dv">2</span>)</span>
+<span id="cb14-2"><a href=""></a>mu <span class="ot">&lt;-</span> alpha <span class="sc">+</span> beta <span class="sc">*</span> Z</span>
+<span id="cb14-3"><a href=""></a>X <span class="ot">&lt;-</span> <span class="fu">normal</span>(mu, sigma)</span>
+<span id="cb14-4"><a href=""></a>p <span class="ot">&lt;-</span> <span class="fu">ilogit</span>(theta[<span class="dv">1</span>] <span class="sc">+</span> theta[<span class="dv">2</span>] <span class="sc">*</span> X)</span>
+<span id="cb14-5"><a href=""></a><span class="fu">distribution</span>(y) <span class="ot">&lt;-</span> <span class="fu">binomial</span>(n, p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>

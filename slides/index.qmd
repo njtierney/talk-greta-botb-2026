@@ -390,6 +390,32 @@ points(dat$x2, dat$y, pch = 19, cex = 0.2)
 - HMC Snaper
 - Extension packages (lme-like formula, more distributions, point processes)
 
+## Resources 
+
+::: {.nonincremental}
+- **github:** [github.com/greta-dev/greta](https://github.com/greta-dev/greta)
+- **Docs:** [greta-stats.org](https://greta-stats.org)
+- **Help:** [https://forum.greta-stats.org/](https://forum.greta-stats.org/)
+
+Install: (not currently on CRAN - soon to be amended!)
+
+```{r}
+#| eval: false
+remotes::install_github("greta-dev/greta")
+```
+
+Or via the [r-universe](https://greta-dev.r-universe.dev/builds)
+
+```{r}
+#| eval: false
+install.packages("greta", 
+                 repos = c("https://greta-dev.r-universe.dev",
+                           "https://cloud.r-project.org"))
+```
+
+:::
+
+
 ## Why 'greta' ?
 
 ::::: columns
@@ -410,10 +436,6 @@ include_graphics("images/grete-hermann-smile.png")
 :::
 :::::
 
-
-
-# {background-image="images/standards.png" background-size="contain"}
-
 # Our turn
 
 Go to
@@ -424,7 +446,12 @@ LINK
 - Follow along with me
 
 
+
 # Extras
+
+# {background-image="images/standards.png" background-size="contain"}
+
+
 
 
 
