@@ -374,7 +374,7 @@ summary(draws)
 
 ```{r}
 #| fig-height: 4
-plot(draws)
+plot(draws[, "coef_flipper_length"])
 ```
 
 ## traceplot
@@ -581,17 +581,12 @@ plot(cloud_link)
 - **Docs:** [greta-stats.org](https://greta-stats.org)
 - **Help:** [https://forum.greta-stats.org/](https://forum.greta-stats.org/)
 
-Install: (not currently on CRAN - soon to be amended!)
+Install via github or [r-universe](https://greta-dev.r-universe.dev/builds) (Soon to be **back on CRAN**)
 
 ```{r}
 #| eval: false
 remotes::install_github("greta-dev/greta")
-```
-
-Or via the [r-universe](https://greta-dev.r-universe.dev/builds)
-
-```{r}
-#| eval: false
+# R Universe
 install.packages("greta", 
                  repos = c("https://greta-dev.r-universe.dev",
                            "https://cloud.r-project.org"))
