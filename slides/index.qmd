@@ -1,0 +1,268 @@
+---
+title: "Getting Started with Bayesian Modelling in greta: A Practical Introduction**"
+subtitle: "Bayes on the Beach<br>2026-02-09"
+author: "Nicholas Tierney & Nick Golding"
+institute: "Statistical Consultant<br>nipaluna, lutruwita (Hobart, Tasmania)"
+format:
+  revealjs:
+    theme: [blood, extra.scss]
+    incremental: true
+    slide-number: c
+    show-slide-number: all
+    footer: "njtierney.github.io/talk-botb26"
+editor: visual
+execute:
+  echo: true
+  warning: false
+  cache: true
+  freeze: true
+---
+
+```{r}
+#| label: library
+#| include: false
+library(tidyverse)
+library(knitr)
+library(colorspace)
+library(naniar)
+library(visdat)
+library(icons)
+library(naniar)
+library(tidyverse)
+library(ggrain)
+library(tinytable)
+```
+
+```{r}
+#| label: source-r-files
+#| echo: false
+#| message: false
+#| output: false
+lapply(list.files(here::here("R"), full.names = TRUE), source)
+```
+
+```{r}
+#| label: helpers
+#| include: false
+
+icons_fa <- icons::fontawesome
+icon_box <- icon_style(icons_fa$solid$`box-open`, fill = "#f0a800")
+icon_link <- icon_style(icons_fa$solid$link, fill = "#f0a800")
+icon_twitter <- icon_style(icons_fa$brands$twitter, fill = "#f0a800")
+icon_github <- icon_style(icons_fa$brands$github, fill = "#f0a800")
+icon_plane <- icon_style(icons_fa$solid$`paper-plane`, fill = "#f0a800")
+
+
+as_table <- function(...) knitr::kable(..., format='html', digits = 3)
+
+theme_set(
+  theme_grey(base_size = 16) +
+  theme(
+    legend.position = "bottom",
+    plot.background = element_rect(fill = "transparent"),
+    legend.background = element_rect(fill = "transparent")
+  )
+)
+
+```
+
+# Audience
+
+1. You want to implement a Bayesian model.
+1. 
+
+# Outline
+
+1. Motivation for "greta"
+1. Why "greta"
+1. History of greta
+1. R is a glue language.
+1. R is a language for writing Domain Specific Languages.
+1. {greta} is an R based solution for writing statistical models.
+1. Getting started with greta.
+
+
+##  {background-image="images/greta-logo-background.png" background-size="contain"}
+
+## greta is R code
+
+::::: columns
+::: {.column width="45%"}
+**stan**
+
+```
+data {
+  real alpha;
+  real beta;
+  real<lower=0> sigma2;
+  int<lower=0> J;
+  array[J] int y;
+  vector[J] Z;
+  array[J] int n;
+}
+transformed data {
+  real<lower=0> sigma;
+  sigma = sqrt(sigma2);
+}
+parameters {
+  real theta1;
+  real theta2;
+  vector[J] X;
+}
+model {
+  array[J] real p;
+  theta1 ~ normal(0, 32); // 32^2 = 1024
+  theta2 ~ normal(0, 32);
+  X ~ normal(alpha + beta * Z, sigma);
+  y ~ binomial_logit(n, theta1 + theta2 * X);
+}
+```
+:::
+
+::: {.column width="55%"}
+**JAGS**
+
+```
+for(j in 1 : J) {
+   y[j] ~ dbin(p[j], n[j])
+   logit(p[j]) <- theta[1] + theta[2] * X[j]
+   X[j] ~ dnorm(mu[j], tau)
+   mu[j] <- alpha + beta * Z[j]
+}
+theta[1] ~ dnorm(0.0, 0.001)
+theta[2] ~ dnorm(0.0, 0.001)
+```
+
+**greta**
+
+``` r
+theta <- normal(0, 32, dim = 2)
+mu <- alpha + beta * Z
+X <- normal(mu, sigma)
+p <- ilogit(theta[1] + theta[2] * X)
+distribution(y) <- binomial(n, p)
+```
+:::
+:::::
+
+
+
+## Why 'greta' ?
+
+::::: columns
+::: {.column width="50%"}
+Grete Hermann (1901 - 1984)
+
+wrote the first algorithms for computer algebra
+
+... without a computer
+
+(To avoid people saying 'greet', the package is spelled *greta* instead)
+:::
+
+::: {.column width="50%"}
+```{r show-grete, out.width = "60%"}
+include_graphics("images/grete-hermann.jpeg")
+```
+:::
+:::::
+
+
+# {greta}: some history 
+
+- 2016: Nick Golding creates
+
+# {background-image="images/standards.png" background-size="contain"}
+
+
+
+<!-- Professor Nick Golding -->
+
+<!-- [greta-stats.org](https://www.greta-stats.org) -->
+
+# google tensorflow
+
+::::: columns
+::: {.column width="45%"}
+-   automatic differentiation
+-   efficient linear algebra
+-   highly parallel
+:::
+
+::: {.column width="45%"}
+```{r}
+#| label: tf-examples
+include_graphics("images/tf-examples.jpg")
+```
+:::
+:::::
+
+## extendable
+
+```{r}
+#| label: extendable
+include_graphics("images/greta-extendable.png")
+```
+
+# `greta.gp`
+
+> `greta.gp` extends `greta` to let you define Gaussian processes as part of your model. It provides a syntax to create and combine GP kernels, and use them to define either full rank or sparse Gaussian processes.
+
+::::: columns
+::: {.column width="60%"}
+``` r
+# kernel & GP
+kernel <- rbf(rbf_len, rbf_var) +
+            bias(1)
+f <- gp(x, kernel)
+# likelihood
+distribution(y) <- normal(f, obs_sd)
+# prediction
+f_plot <- project(f, x_plot)
+```
+:::
+
+::: {.column width="38%"}
+```{r extendable-greta-gp}
+include_graphics("images/greta-extendable-gp.png")
+```
+:::
+:::::
+
+## What greta looks like
+
+::::: columns
+::: {.column width="50%"}
+$$
+\alpha \sim Normal(0, 5)
+$$
+
+$$
+\beta \sim Normal(0, 3)
+$$
+
+$$
+\sigma \sim logNormal(0, 5)
+$$ $$
+\mu = \alpha + \beta X
+$$
+
+$$
+Y \sim Normal(\mu, \sigma)
+$$
+:::
+
+::: {.column width="50%"}
+```{r greta-show, eval = FALSE, echo = TRUE}
+x <- penguins$bill_length_mm
+y <- penguins$flipper_length_mm
+alpha <- normal(0,5)
+beta <- normal(0,3)
+sd <- lognormal(0,3)
+mu <- alpha + coef * x
+distribution(y) <- normal(mu, sd)
+m <- model(mu, beta, sd)
+draws <- mcmc(m)
+```
+:::
+:::::
