@@ -9,7 +9,7 @@ format:
     incremental: true
     slide-number: c
     show-slide-number: all
-    footer: "njtierney.github.io/talk-botb26"
+    footer: "njtierney.github.io/talk-greta-botb-2026/"
 editor: visual
 execute:
   echo: true
@@ -73,6 +73,7 @@ theme_set(
 -   **2008-2012**: Undergrad + honours in Psychology \@ UQ
 
 -   **2013-2017**: PhD Statistics \@ QUT
+
     -   EDA / Bayesian / Geospatial / Optimal placement
 
 -   **2017 - 2020**: Research Fellow / Lecturer \@ Monash
@@ -83,25 +84,23 @@ theme_set(
 
     -   Maintain and design R packages: [`greta`](), [`conmat`]()
 
--   **2025 - **: Statistical Consultant
+-   **2025 -** : Statistical Consultant
 
     -   Statistical modelling, software, teaching, code review
-    
-:::{.notes}
+
+::: notes
 -   Maintain Statistical Software (like greta)
 
--   Translate econometric models from code --> R package
+-   Translate econometric models from code --\> R package
 
 -   Extend epidemiological modelling software
 
 -   Provide code review to researchers
 
--   Translate Models of urban biodiversity --> R packages
+-   Translate Models of urban biodiversity --\> R packages
 
 -   Develop colour palettes, ggplot themes, automation
-
 :::
-    
 
 # ❤️ Hiking! `njt.micro.blog`
 
@@ -115,34 +114,26 @@ theme_set(
 
 ## Designing modelling interfaces is (NP) hard
 
-:::: columns
-
+::::: columns
 ::: {.column width="60%"}
-
 Nick Golding (right) created {greta} in 2016, to express statistical models in R, while taking advantage of Google `Tensorflow`:
 
-  -  automatic differentiation
-  -  efficient linear algebra
-  -  highly parallel
-  -  new samplers (SNAPER-HMC)
-
+-   automatic differentiation
+-   efficient linear algebra
+-   highly parallel
+-   new samplers (SNAPER-HMC)
 :::
 
 ::: {.column width="40%"}
-
 ![](images/nick-golding.jpeg){width="80%"}
-
 :::
+:::::
 
-::::
-
-
----
-
+------------------------------------------------------------------------
 
 ## A penguins model {.smaller}
 
-:::: {.columns}
+:::::: columns
 ::: {.column width="40%"}
 $$
 \begin{aligned}
@@ -157,9 +148,8 @@ i &= 1, \ldots, N
 $$
 :::
 
-::: {.column width="60%"}
-::: {.panel-tabset}
-
+:::: {.column width="60%"}
+::: panel-tabset
 ## JAGS
 
 ```{r}
@@ -183,7 +173,7 @@ model {
 
 ## STAN
 
-```r
+``` r
 data {
   int<lower=0> N;
   vector[N] flipper_length_mm;
@@ -230,15 +220,11 @@ y <- as_data(is_female_numeric)
 distribution(y) <- bernoulli(probability_female)
 m <- model(intercept, coef_flipper, coef_mass)
 ```
-
-:::
-
 :::
 ::::
+::::::
 
-
-# {background-image="images/greta-vs-stan-jags.png" background-size="65%"}
-
+#  {background-image="images/greta-vs-stan-jags.png" background-size="65%"}
 
 ## Default: Gradient-based inference
 
@@ -250,8 +236,7 @@ include_graphics("images/gradient-based.png")
 
 ## Using `greta`
 
-:::{.panel-tabset}
-
+::: panel-tabset
 ## Model prep
 
 ```{r}
@@ -301,7 +286,6 @@ draws <- mcmc(m,
               )
               )
 ```
-
 :::
 
 ## {greta} integrattions
@@ -360,15 +344,12 @@ draws <- mcmc(
 )
 ```
 
-
-::: {.panel-tabset}
-
+::: panel-tabset
 ## summary
 
 ```{r}
 summary(draws)
 ```
-
 
 ## coda
 
@@ -391,12 +372,11 @@ bayesplot::mcmc_trace(draws)
 bayesplot::mcmc_dens(draws)
 ```
 
-## diagnostics 
+## diagnostics
 
 ```{r}
 coda::gelman.diag(draws, autoburnin = FALSE, multivariate = FALSE)
 ```
-
 :::
 
 ## {greta} is Extendable
@@ -409,19 +389,12 @@ include_graphics("images/greta-extendable.png")
 
 # `greta.gam`
 
-:::{.columns}
-
-:::{.column width="45%"}
-
-> Use [mgcv](https://CRAN.R-project.org/package=mgcv)
-smoother functions and formula syntax to define smooth terms for use in
-a [greta](https://greta-stats.org/) model. Define your
-likelihood, fit with MCMC.
-
+::::: columns
+::: {.column width="45%"}
+> Use [mgcv](https://CRAN.R-project.org/package=mgcv) smoother functions and formula syntax to define smooth terms for use in a [greta](https://greta-stats.org/) model. Define your likelihood, fit with MCMC.
 :::
 
-:::{.column width="55%"}
-
+::: {.column width="55%"}
 ```{r}
 #| echo: false
 #| include: false
@@ -438,15 +411,12 @@ plot(mgcv_fit,
      scheme = 1, 
      shift = coef(mgcv_fit)[1])
 ```
-
 :::
-
-:::
+:::::
 
 ## `greta.gam`
 
-:::{.panel-tabset}
-
+::: panel-tabset
 ## code
 
 ``` r
@@ -471,17 +441,15 @@ points(dat$x2, dat$y, pch = 19, cex = 0.2)
 ## plot
 
 ![](images/greta-gam-mcmc.png)
-
-
 :::
 
 ## Future Features
 
-- Marginalisation (discrete, laplace, variational)
-- Discrete Samplers
-- Samplers for big data
-- HMC Snaper
-- Extension packages (lme-like formula, more distributions, point processes)
+-   Marginalisation (discrete, laplace, variational)
+-   Discrete Samplers
+-   Samplers for big data
+-   HMC Snaper
+-   Extension packages (lme-like formula, more distributions, point processes)
 
 ## Why 'greta' ?
 
@@ -509,42 +477,31 @@ include_graphics("images/grete-hermann-smile.png")
 
 ## Our Turn: Modelling Penguins! {.smaller}
 
-:::{.columns}
-
-:::{.column width="40%"}
-
+::::: columns
+::: {.column width="40%"}
 ![](images/palmerpenguins.png)
-
 :::
 
-
-:::{.column width="60%"}
-
-
-* Build a model to predict the sex of an individual penguin based on measurements of that individual.
-* This is a thing people do - see ["Ecological Sexual Dimorphism and Environmental Variability within a Community of Antarctic Penguins (Genus Pygoscelis)"](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0090081) by Gorman et al., 2014.
-* The `penguins` dataset is now also in base R 4.5.0! (With slight differences, see [njtierney.com/post/2025/04/14/r-version-4-5-0-is-out/](https://www.njtierney.com/post/2025/04/14/r-version-4-5-0-is-out/))
-
+::: {.column width="60%"}
+-   Build a model to predict the sex of an individual penguin based on measurements of that individual.
+-   This is a thing people do - see ["Ecological Sexual Dimorphism and Environmental Variability within a Community of Antarctic Penguins (Genus Pygoscelis)"](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0090081) by Gorman et al., 2014.
+-   The `penguins` dataset is now also in base R 4.5.0! (With slight differences, see [njtierney.com/post/2025/04/14/r-version-4-5-0-is-out/](https://www.njtierney.com/post/2025/04/14/r-version-4-5-0-is-out/))
 :::
-
-:::
+:::::
 
 ## Our Turn: Modelling Penguins! {.smaller}
 
-:::{.columns}
-
-:::{.column width="50%"}
-
-- Predict probability of a penguin being female, based on flipper length, and body mass.
-- Demonstrate greta workflow: 
-  - DAG plot
-  - `calculate()` for simulations
-  - integrates with `coda` and `bayesplot`
-
+::::: columns
+::: {.column width="50%"}
+-   Predict probability of a penguin being female, based on flipper length, and body mass.
+-   Demonstrate greta workflow:
+    -   DAG plot
+    -   `calculate()` for simulations
+    -   integrates with `coda` and `bayesplot`
+- But first, any questions?
 :::
 
-:::{.column width="50%"}
-
+::: {.column width="50%"}
 $$
 \begin{aligned}
 \beta_0, \beta_1, \beta_2 &\sim \text{Normal}(0, 10) \\
@@ -556,10 +513,8 @@ y_i &\sim \text{Bernoulli}(p_i), \\
 i &= 1, \ldots, N
 \end{aligned}
 $$
-
 :::
-
-:::
+:::::
 
 ## Our turn: posit.cloud {.small}
 
@@ -569,17 +524,16 @@ cloud_link <- qrcode::qr_code("https://posit.cloud/spaces/749995/join?access_cod
 plot(cloud_link)
 ```
 
-* Sign in with a github/google
-* Follow along with me
-* Or run locally from [github.com/greta-dev/greta-botb26-workshop](https://github.com/greta-dev/greta-botb26-workshop)
+-   Sign in with a github/google
+-   Follow along with me
+-   Or run locally from [github.com/greta-dev/greta-botb26-workshop](https://github.com/greta-dev/greta-botb26-workshop)
 
+## Resources
 
-## Resources 
-
-::: {.nonincremental}
-- **github:** [github.com/greta-dev/greta](https://github.com/greta-dev/greta)
-- **Docs:** [greta-stats.org](https://greta-stats.org)
-- **Help:** [https://forum.greta-stats.org/](https://forum.greta-stats.org/)
+::: nonincremental
+-   **github:** [github.com/greta-dev/greta](https://github.com/greta-dev/greta)
+-   **Docs:** [greta-stats.org](https://greta-stats.org)
+-   **Help:** <https://forum.greta-stats.org/>
 
 Install via github or [r-universe](https://greta-dev.r-universe.dev/builds) (Soon to be **back on CRAN**)
 
@@ -591,26 +545,17 @@ install.packages("greta",
                  repos = c("https://greta-dev.r-universe.dev",
                            "https://cloud.r-project.org"))
 ```
-
 :::
-
-
 
 # Extras
 
-# {background-image="images/standards.png" background-size="contain"}
-
-
-
-
+#  {background-image="images/standards.png" background-size="contain"}
 
 ## The WinBUGS example: Air {.smaller}
 
 Air analyses reported respiratory illness versus exposure to nitrogen dioxide in 103 children. The parameters `alpha`, `beta` and `sigma2` are known in advance, and the data are grouped into three categories.
 
-
-
-::::: columns
+::::::: columns
 ::: {.column width="40%"}
 **Mathematical Model:**
 
@@ -624,12 +569,10 @@ y_j &\sim \text{Binomial}(n_j, p_j) \\
 j &= 1, \ldots, J \\
 \end{aligned}
 $$
-
 :::
 
-::: {.column width="60%"}
-:::{.panel-tabset}
-
+::::: {.column width="60%"}
+:::: panel-tabset
 ## Data
 
 ```{r}
@@ -644,10 +587,9 @@ tau <- 1 / sigma2
 J <- 3
 ```
 
-
 ## JAGS
 
-```{.bugs}
+``` bugs
 for(j in 1 : J) {
    y[j] ~ dbin(p[j], n[j])
    logit(p[j]) <- theta[1] + theta[2] * X[j]
@@ -660,8 +602,8 @@ theta[2] ~ dnorm(0.0, 0.001)
 
 ## STAN
 
-:::{.small}
-```{.stan}
+::: small
+``` stan
 data {
   real alpha;
   real beta;
@@ -700,7 +642,6 @@ X <- normal(mu, sigma)
 p <- ilogit(theta[1] + theta[2] * X)
 distribution(y) <- binomial(n, p)
 ```
-:::
-
-:::
+::::
 :::::
+:::::::
