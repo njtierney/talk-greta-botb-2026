@@ -9,8 +9,7 @@ format:
     incremental: true
     slide-number: c
     show-slide-number: all
-    footer: "njtierney.github.io/talk-greta-botb-2026/"
-editor: visual
+    footer: "link.njtierney.com/botb26-talk"
 execute:
   echo: true
   warning: false
@@ -112,24 +111,25 @@ theme_set(
 
 ##  {background-image="images/idem-lab.png" background-size="contain"}
 
-## Designing modelling interfaces is (NP) hard
+## Designing modelling interfaces is (NP) hard 
 
+:::::: {.small}
 ::::: columns
-::: {.column width="60%"}
+::: {.column width="55%"}
 Nick Golding (right) created {greta} in 2016, to express statistical models in R, while taking advantage of Google `Tensorflow`:
 
--   automatic differentiation
--   efficient linear algebra
--   highly parallel
--   new samplers (SNAPER-HMC)
+-   Automatic differentiation
+-   Efficient linear algebra
+-   Highly parallel
+-   New samplers (SNAPER-HMC)
+-   GPU usage
 :::
 
-::: {.column width="40%"}
+::: {.column width="45%"}
 ![](images/nick-golding.jpeg){width="80%"}
 :::
 :::::
-
-------------------------------------------------------------------------
+::::::
 
 ## A penguins model {.smaller}
 
@@ -231,6 +231,7 @@ m <- model(intercept, coef_flipper, coef_mass)
 ```{r}
 #| label: gradient-based
 #| echo: false
+#| fig-align: center
 include_graphics("images/gradient-based.png")
 ```
 
@@ -445,11 +446,19 @@ points(dat$x2, dat$y, pch = 19, cex = 0.2)
 
 ## Future Features
 
+::: {.small}
+
 -   Marginalisation (discrete, laplace, variational)
 -   Discrete Samplers
 -   Samplers for big data
--   HMC Snaper
+-   HMC Snaper (Sountsov & Hoffman)
 -   Extension packages (lme-like formula, more distributions, point processes)
+-   Upgrading to latest TF methods
+-   Improved "auto" installation
+-   "Swappable" backends (`use_touch()/base()/tf()`, etc.)
+-   Further customisation to GPU
+
+:::
 
 ## Why 'greta' ?
 
@@ -471,11 +480,13 @@ include_graphics("images/grete-hermann-smile.png")
 :::
 :::::
 
+# Pause: Questions about `{greta}`?
+
 # Modelling Penguins with `palmerpenguins` {background-color="white"}
 
 ![](images/lter_penguins.png)
 
-## Our Turn: Modelling Penguins! {.smaller}
+## Our Turn: Modelling Penguins! {.small}
 
 ::::: columns
 ::: {.column width="40%"}
@@ -491,15 +502,17 @@ include_graphics("images/grete-hermann-smile.png")
 
 ## Our Turn: Modelling Penguins! {.smaller}
 
-::::: columns
-::: {.column width="50%"}
+:::::: columns
+:::: {.column width="50%"}
+::: nonincremental
 -   Predict probability of a penguin being female, based on flipper length, and body mass.
 -   Demonstrate greta workflow:
     -   DAG plot
     -   `calculate()` for simulations
     -   integrates with `coda` and `bayesplot`
-- But first, any questions?
+-   But first, any questions?
 :::
+::::
 
 ::: {.column width="50%"}
 $$
@@ -514,19 +527,29 @@ i &= 1, \ldots, N
 \end{aligned}
 $$
 :::
-:::::
+::::::
 
-## Our turn: posit.cloud {.small}
+## Our turn: posit.cloud `link.njtierney.com/botb26-workshop` {.small}
 
+:::::: columns
+::: {.column width="50%"}
 ```{r}
 #| echo: false
-cloud_link <- qrcode::qr_code("https://posit.cloud/spaces/749995/join?access_code=nwqtNUNzpeSkfAgWHbgUNiba_Hm4fuggJSQqhDU3")
+#| fig-width: 7
+#| fig-height: 7
+cloud_link <- qrcode::qr_code("link.njtierney.com/botb26-workshop")
 plot(cloud_link)
 ```
+:::
 
+:::: {.column width="50%"}
+::: nonincremental
 -   Sign in with a github/google
 -   Follow along with me
--   Or run locally from [github.com/greta-dev/greta-botb26-workshop](https://github.com/greta-dev/greta-botb26-workshop)
+-   [greta-dev/greta-botb26-workshop](https://github.com/greta-dev/greta-botb26-workshop)
+:::
+::::
+::::::
 
 ## Resources
 

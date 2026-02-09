@@ -95,7 +95,7 @@
     code span.vs { color: #abe338; } /* VerbatimString */
     code span.wa { color: #dcc6e0; } /* Warning */
   </style>
-  <link rel="stylesheet" href="index_files/libs/revealjs/dist/theme/quarto-92b07133b4602dc8e33dc071a6196b5d.css">
+  <link rel="stylesheet" href="index_files/libs/revealjs/dist/theme/quarto-3bf2948b8da0d7713e9288e2ab959319.css">
   <link href="index_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="index_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="index_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -264,18 +264,21 @@ Nicholas Tierney
 </section>
 <section id="designing-modelling-interfaces-is-np-hard" class="slide level2">
 <h2>Designing modelling interfaces is (NP) hard</h2>
+<div class="small">
 <div class="columns">
-<div class="column" style="width:60%;">
+<div class="column" style="width:55%;">
 <p>Nick Golding (right) created {greta} in 2016, to express statistical models in R, while taking advantage of Google <code>Tensorflow</code>:</p>
 <ul>
-<li class="fragment">automatic differentiation</li>
-<li class="fragment">efficient linear algebra</li>
-<li class="fragment">highly parallel</li>
-<li class="fragment">new samplers (SNAPER-HMC)</li>
+<li class="fragment">Automatic differentiation</li>
+<li class="fragment">Efficient linear algebra</li>
+<li class="fragment">Highly parallel</li>
+<li class="fragment">New samplers (SNAPER-HMC)</li>
+<li class="fragment">GPU usage</li>
 </ul>
-</div><div class="column" style="width:40%;">
+</div><div class="column" style="width:45%;">
 <p><img data-src="images/nick-golding.jpeg" style="width:80.0%"></p>
 </div></div>
+</div>
 </section>
 <section id="a-penguins-model" class="slide level2 smaller">
 <h2>A penguins model</h2>
@@ -372,7 +375,7 @@ i &amp;= 1, \ldots, N
 <section id="default-gradient-based-inference" class="slide level2">
 <h2>Default: Gradient-based inference</h2>
 
-<img data-src="images/gradient-based.png" width="278" class="r-stretch"></section>
+<img data-src="images/gradient-based.png" class="quarto-figure quarto-figure-center r-stretch" width="278"></section>
 <section id="using-greta" class="slide level2">
 <h2>Using <code>greta</code></h2>
 <div class="panel-tabset">
@@ -568,13 +571,19 @@ coef_body_mass            1.01       1.01</code></pre>
 </section>
 <section id="future-features" class="slide level2">
 <h2>Future Features</h2>
+<div class="small">
 <ul>
 <li class="fragment">Marginalisation (discrete, laplace, variational)</li>
 <li class="fragment">Discrete Samplers</li>
 <li class="fragment">Samplers for big data</li>
-<li class="fragment">HMC Snaper</li>
+<li class="fragment">HMC Snaper (Sountsov &amp; Hoffman)</li>
 <li class="fragment">Extension packages (lme-like formula, more distributions, point processes)</li>
+<li class="fragment">Upgrading to latest TF methods</li>
+<li class="fragment">Improved “auto” installation</li>
+<li class="fragment">“Swappable” backends (<code>use_touch()/base()/tf()</code>, etc.)</li>
+<li class="fragment">Further customisation to GPU</li>
 </ul>
+</div>
 </section>
 <section id="why-greta" class="slide level2">
 <h2>Why ‘greta’ ?</h2>
@@ -596,12 +605,17 @@ coef_body_mass            1.01       1.01</code></pre>
 </div>
 </div></div>
 </section></section>
+<section id="pause-questions-about-greta" class="title-slide slide level1 center">
+<h1>Pause: Questions about <code>{greta}</code>?</h1>
+
+</section>
+
 <section>
 <section id="modelling-penguins-with-palmerpenguins" class="title-slide slide level1 center" data-background-color="white">
 <h1>Modelling Penguins with <code>palmerpenguins</code></h1>
 
 <img data-src="images/lter_penguins.png" class="r-stretch"></section>
-<section id="our-turn-modelling-penguins" class="slide level2 smaller">
+<section id="our-turn-modelling-penguins" class="slide level2 small">
 <h2>Our Turn: Modelling Penguins!</h2>
 <div class="columns">
 <div class="column" style="width:40%;">
@@ -619,14 +633,14 @@ coef_body_mass            1.01       1.01</code></pre>
 <div class="columns">
 <div class="column" style="width:50%;">
 <ul>
-<li class="fragment">Predict probability of a penguin being female, based on flipper length, and body mass.</li>
-<li class="fragment">Demonstrate greta workflow:
+<li>Predict probability of a penguin being female, based on flipper length, and body mass.</li>
+<li>Demonstrate greta workflow:
 <ul>
-<li class="fragment">DAG plot</li>
-<li class="fragment"><code>calculate()</code> for simulations</li>
-<li class="fragment">integrates with <code>coda</code> and <code>bayesplot</code></li>
+<li>DAG plot</li>
+<li><code>calculate()</code> for simulations</li>
+<li>integrates with <code>coda</code> and <code>bayesplot</code></li>
 </ul></li>
-<li class="fragment">But first, any questions?</li>
+<li>But first, any questions?</li>
 </ul>
 </div><div class="column" style="width:50%;">
 <p><span class="math display">\[
@@ -642,14 +656,26 @@ i &amp;= 1, \ldots, N
 \]</span></p>
 </div></div>
 </section>
-<section id="our-turn-posit.cloud" class="slide level2 small">
-<h2>Our turn: posit.cloud</h2>
-
-<img data-src="index_files/figure-revealjs/unnamed-chunk-12-1.png" width="960" class="r-stretch"><ul>
-<li class="fragment">Sign in with a github/google</li>
-<li class="fragment">Follow along with me</li>
-<li class="fragment">Or run locally from <a href="https://github.com/greta-dev/greta-botb26-workshop">github.com/greta-dev/greta-botb26-workshop</a></li>
+<section id="our-turn-posit.cloud-link.njtierney.combotb26-workshop" class="slide level2 small">
+<h2>Our turn: posit.cloud <code>link.njtierney.com/botb26-workshop</code></h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="index_files/figure-revealjs/unnamed-chunk-12-1.png" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</div><div class="column" style="width:50%;">
+<ul>
+<li>Sign in with a github/google</li>
+<li>Follow along with me</li>
+<li><a href="https://github.com/greta-dev/greta-botb26-workshop">greta-dev/greta-botb26-workshop</a></li>
 </ul>
+</div></div>
 </section>
 <section id="resources" class="slide level2">
 <h2>Resources</h2>
@@ -766,7 +792,7 @@ j &amp;= 1, \ldots, J \\
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <div class="footer footer-default">
-<p>njtierney.github.io/talk-greta-botb-2026/</p>
+<p>link.njtierney.com/botb26-talk</p>
 </div>
 </div></div>
 

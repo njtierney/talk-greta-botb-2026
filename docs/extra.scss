@@ -3,6 +3,8 @@ $custom-col: #f0a800;
 
 $presentation-h1-font-size: 2em;
 
+$link-color: #42affa;
+
 /*-- scss:rules --*/
 
 .reveal strong {
@@ -25,3 +27,8 @@ $presentation-h1-font-size: 2em;
   max-width: 100%;
   overflow-x: auto;
 }
+
+.reveal a:hover {
+  text-decoration: underline;
+}
+
